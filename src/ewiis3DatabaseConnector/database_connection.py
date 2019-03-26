@@ -3,6 +3,7 @@ import pandas as pd
 import logging
 import time
 from sqlalchemy import create_engine
+from dotenv import find_dotenv, load_dotenv
 
 # load up the .env entries as environment variables
 load_dotenv(find_dotenv())
