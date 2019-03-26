@@ -12,9 +12,5 @@ setup(
         "Click>=7.0",
         "numpy>=1.16.1",
         "pandas>=0.23.4"
-    ],
-    entry_points="""
-            [console_scripts]
-            evsim=ewiis3DatabaseConnector.ewiis3DatabaseConnector:cli
-        """,
+    ]
 )
