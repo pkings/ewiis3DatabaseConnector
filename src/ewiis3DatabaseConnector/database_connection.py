@@ -4,6 +4,7 @@ import logging
 import time
 from sqlalchemy import create_engine
 from dotenv import find_dotenv, load_dotenv
+import os
 
 # load up the .env entries as environment variables
 load_dotenv(find_dotenv())
