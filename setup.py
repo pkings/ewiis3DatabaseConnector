@@ -9,8 +9,9 @@ setup(
     package_dir={"": "src"},
     include_package_data=True,
     install_requires=[
-        "Click>=7.0",
-        "numpy>=1.16.1",
-        "pandas>=0.23.4"
+        "numpy==1.16.1",
+        "pandas==0.23.4",
+        "pymysql==0.9.3",
+        "sqlalchemy==1.3.1"
     ]
 )
