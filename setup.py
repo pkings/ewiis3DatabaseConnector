@@ -12,6 +12,7 @@ setup(
         "numpy==1.16.2",
         "pandas==0.23.4",
         "pymysql==0.9.3",
-        "sqlalchemy==1.3.1"
+        "sqlalchemy==1.3.1",
+        "python-dotenv==0.8.2"
     ]
 )
