@@ -72,17 +72,6 @@ def load_rates():
 ####################################################
 
 
-""" # deprecated: from broker_analysis
-def load_customer_prosumption(game_id=None):
-    if game_id:
-        where_clause = ' AND gameId="{}"'.format(game_id)
-    else:
-        where_clause = ''
-    sql_statement = 'SELECT postedTimeslotIndex, SUM(kWH) FROM ewiis3.tariff_transaktion WHERE (txType = "CONSUME" OR txType = "PRODUCE"){} GROUP BY postedTimeslotIndex'.format(where_clause)
-    df_customer_prosumption = execute_sql_query(sql_statement)
-    return df_customer_prosumption"""
-
-
 def load_distribution_reports(game_id=None):
     if game_id:
         where_clause = ' WHERE gameId="{}"'.format(game_id)
@@ -93,7 +82,17 @@ def load_distribution_reports(game_id=None):
     return df_distribution_reports
 
 
-def load_customer_prosumption(game_id):
+def load_customer_prosumption(game_id=None):
+    if game_id:
+        where_clause = ' AND gameId="{}"'.format(game_id)
+    else:
+        where_clause = ''
+    sql_statement = 'SELECT postedTimeslotIndex, SUM(kWH) FROM ewiis3.tariff_transaktion WHERE (txType = "CONSUME" OR txType = "PRODUCE"){} GROUP BY postedTimeslotIndex'.format(where_clause)
+    df_customer_prosumption = execute_sql_query(sql_statement)
+    return df_customer_prosumption
+
+
+def load_customer_prosumption_with_weather_and_time(game_id):
     if game_id is None:
         return pd.DataFrame(), game_id
 

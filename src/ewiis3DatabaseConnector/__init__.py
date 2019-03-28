@@ -13,6 +13,7 @@ from .joined_data import load_tariff_evaluation_metrics  # noqa
 from .joined_data import load_rates  # noqa
 from .joined_data import load_distribution_reports  # noqa
 from .joined_data import load_customer_prosumption  # noqa
+from .joined_data import load_customer_prosumption_with_weather_and_time  # noqa
 from .joined_data import load_grid_consumption_and_production  # noqa
 from .full_table_load import load_weather_report  # noqa
 from .full_table_load import load_orderbooks  # noqa
