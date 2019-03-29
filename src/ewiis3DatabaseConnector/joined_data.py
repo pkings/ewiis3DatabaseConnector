@@ -1,4 +1,5 @@
 import time
+import pandas as pd
 
 from ewiis3DatabaseConnector import execute_sql_query
 
