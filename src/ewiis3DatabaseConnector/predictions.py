@@ -54,7 +54,7 @@ def store_predictions(df_prosumption_predictions, table_name):
 
 def store_price_intervals(df_intervals, game_id):
     try:
-        conn = __connect_to_local_database()
+        conn = connect_to_local_database()
         conn.cursor()
         cur = conn.cursor()
         cur.execute('DELETE FROM ewiis3.wholesale_price_intervals WHERE game_id="{}"'.format(game_id))
