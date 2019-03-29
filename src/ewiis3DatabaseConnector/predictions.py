@@ -52,12 +52,12 @@ def store_predictions(df_prosumption_predictions, table_name):
     df_prosumption_predictions.to_sql(name=table_name, schema='ewiis3', con=cnx, if_exists='append', index=False)
 
 
-def store_price_intervals(df_intervals):
+def store_price_intervals(df_intervals, game_id):
     try:
         conn = __connect_to_local_database()
         conn.cursor()
         cur = conn.cursor()
-        cur.execute("TRUNCATE TABLE ewiis3.wholesale_price_intervals")
+        cur.execute('DELETE FROM ewiis3.wholesale_price_intervals WHERE game_id="{}"'.format(game_id))
         conn.commit()
         conn.close()
 
