@@ -1,3 +1,5 @@
+import pandas as pd
+
 from ewiis3DatabaseConnector import execute_sql_query, connect_to_local_database, create_db_connection_engine
 
 
