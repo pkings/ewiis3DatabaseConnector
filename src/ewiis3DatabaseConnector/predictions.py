@@ -34,24 +34,24 @@ def load_prosumption_prediction(game_id):
     return df_prosumption_prediction"""
 
 
-def load_predictions(table_name, game_id):
+def load_predictions(table_name, game_id, target, type):
     try:
         if game_id:
-            where_clause = ' WHERE game_id="{}"'.format(game_id)
+            where_clause = ' WHERE game_id="{}" AND target="{}" AND type="{}"'.format(game_id, target, type)
         else:
             where_clause = ''
 
         sql_statement = "SELECT * FROM {}{}".format(table_name, where_clause)
         df_predictions = execute_sql_query(sql_statement)
     except Exception as e:
-        print('Error occured while requesting `{}` table from db.'.format(table_name))
+        print('Error occured while requesting `{}` table with target {} and type {} for game_id {}from db.'.format(table_name, target, type, game_id))
         df_predictions = pd.DataFrame()
     return df_predictions
 
 
-def store_predictions(df_prosumption_predictions, table_name):
+def store_predictions(df_predictions, table_name):
     cnx = create_db_connection_engine()
-    df_prosumption_predictions.to_sql(name=table_name, schema='ewiis3', con=cnx, if_exists='append', index=False)
+    df_predictions.to_sql(name=table_name, schema='ewiis3', con=cnx, if_exists='append', index=False)
 
 
 def store_price_intervals(df_intervals, game_id):
