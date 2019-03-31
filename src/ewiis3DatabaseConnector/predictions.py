@@ -34,11 +34,22 @@ def load_prosumption_prediction(game_id):
     return df_prosumption_prediction"""
 
 
-def load_predictions(table_name, game_id, target, type):
+def load_predictions(table_name, game_id, target=None, type=None):
     try:
+        where_clause = ' WHERE'
         if game_id:
-            where_clause = ' WHERE game_id="{}" AND target="{}" AND type="{}"'.format(game_id, target, type)
-        else:
+            where_clause = '{} game_id="{}"'.format(where_clause, game_id)
+        if target:
+            and_or_not = ''
+            if where_clause.find('=') > -1:
+                and_or_not = 'AND '
+            where_clause = '{} {}target="{}"'.format(where_clause, and_or_not, target)
+        if type:
+            and_or_not = ''
+            if where_clause.find('=') > -1:
+                and_or_not = 'AND '
+            where_clause = '{} {}type="{}"'.format(where_clause, and_or_not, type)
+        if not game_id and not target and not type:
             where_clause = ''
 
         sql_statement = "SELECT * FROM {}{}".format(table_name, where_clause)
