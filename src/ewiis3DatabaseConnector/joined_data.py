@@ -121,3 +121,18 @@ def load_grid_consumption_and_production(game_id):
         df_total_grid_consumption_and_production = pd.DataFrame()
     print('Loading grid consumption and production last: {} seconds.'.format(time.time() - start_time))
     return df_total_grid_consumption_and_production, game_id
+
+
+def load_weather_forecast(game_id):
+    if game_id is None:
+        return pd.DataFrame(), game_id
+
+    start_time = time.time()
+    try:
+        sql_statement = 'SELECT t.* FROM ewiis3.weather_forecast t WHERE gameId="{}" ORDER BY postedTimeslotIndex DESC LIMIT 24'.format(game_id)
+        df_lates_weather_forecast = execute_sql_query(sql_statement)
+    except Exception as e:
+        print('Error occured while requesting weather forecast from db.')
+        df_lates_weather_forecast = pd.DataFrame()
+    print('Loading grid weather forecast lasted: {} seconds.'.format(time.time() - start_time))
+    return df_lates_weather_forecast, game_id

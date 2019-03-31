@@ -15,6 +15,7 @@ from .joined_data import load_distribution_reports  # noqa
 from .joined_data import load_customer_prosumption  # noqa
 from .joined_data import load_customer_prosumption_with_weather_and_time  # noqa
 from .joined_data import load_grid_consumption_and_production  # noqa
+from .joined_data import load_weather_forecast  # noqa
 from .full_table_load import load_weather_report  # noqa
 from .full_table_load import load_orderbooks  # noqa
 from .full_table_load import load_full_table_cleared_trades  # noqa
