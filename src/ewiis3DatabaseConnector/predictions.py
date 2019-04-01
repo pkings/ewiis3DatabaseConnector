@@ -23,15 +23,13 @@ def load_customer_prosumption_prediction(game_id):
     return df_customer_prosumption"""
 
 
-
-""" use load predictions instead
-def load_prosumption_prediction(game_id):
+def load_grid_consumption_and_production_prediction(game_id):
     try:
-        sql_statement = 'SELECT t.* FROM ewiis3.prosumption_prediction t WHERE game_id="{}"'.format(game_id)
+        sql_statement = 'SELECT t.* FROM ewiis3.prediction t WHERE game_id="{}" AND target="grid" AND (type="consumption" OR type="production")'.format(game_id)
         df_prosumption_prediction = execute_sql_query(sql_statement)
     except Exception as E:
         df_prosumption_prediction = pd.DataFrame()
-    return df_prosumption_prediction"""
+    return df_prosumption_prediction
 
 
 def load_predictions(table_name, game_id, target=None, type=None):

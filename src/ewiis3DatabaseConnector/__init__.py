@@ -4,6 +4,7 @@ from .database_connection import execute_sql_query  # noqa
 from .predictions import load_predictions  # noqa
 from .predictions import store_price_intervals  # noqa
 from .predictions import store_predictions  # noqa
+from .predictions import load_grid_consumption_and_production_prediction  # noqa
 from .helper import get_current_game_id_and_timeslot  # noqa
 from .helper import load_all_game_ids  # noqa
 from .joined_data import load_cleared_trades  # noqa
