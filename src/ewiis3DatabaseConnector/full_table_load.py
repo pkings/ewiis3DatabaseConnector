@@ -49,3 +49,9 @@ def load_order_submits():
     sql_statement = "SELECT t.* FROM ewiis3.order_submit t"
     df_order_submits = execute_sql_query(sql_statement)
     return df_order_submits
+
+
+def load_tariff_subscription_shares():
+    sql_statement = "SELECT t.* FROM ewiis3.tariffSubscriptions t"
+    df_tariff_subscription_shares = execute_sql_query(sql_statement)
+    return df_tariff_subscription_shares

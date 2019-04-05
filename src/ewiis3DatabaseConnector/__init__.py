@@ -26,3 +26,4 @@ from .full_table_load import load_balancing_transactions  # noqa
 from .full_table_load import load_capacity_transactions  # noqa
 from .full_table_load import load_tariff_specifications  # noqa
 from .full_table_load import load_order_submits  # noqa
+from .full_table_load import load_tariff_subscription_shares  # noqa
