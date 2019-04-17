@@ -6,7 +6,10 @@ from .predictions import store_price_intervals  # noqa
 from .predictions import store_predictions  # noqa
 from .predictions import load_grid_consumption_and_production_prediction  # noqa
 from .helper import get_current_game_id_and_timeslot  # noqa
-from .helper import load_all_game_ids  # noqa
+from .helper import load_latest_timeslot_of_gameId  # noqa
+from .helper import load_finished_gameIds  # noqa
+from .helper import load_all_gameIds  # noqa
+from .helper import get_running_gameIds  # noqa
 from .joined_data import load_cleared_trades  # noqa
 from .joined_data import load_grid_imbalance  # noqa
 from .joined_data import load_balance_report  # noqa
