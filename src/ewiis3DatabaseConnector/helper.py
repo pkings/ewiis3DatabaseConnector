@@ -38,23 +38,25 @@ def load_finished_gameIds():
     try:
         sql_statement = 'SELECT DISTINCT(t.gameId) FROM ewiis3.finished_game t'
         df_finished_games = execute_sql_query(sql_statement)
+        finished_gameIds = list(df_finished_games['gameId'])
     except Exception as e:
         print('Error occured while requesting finished gameIds from db.')
-        df_finished_games = pd.DataFrame()
+        finished_gameIds = []
     print('Loading finished gameIds lasted: {} seconds.'.format(time.time() - start_time))
-    return list(df_finished_games['gameId'])
+    return finished_gameIds
 
 
 def load_all_gameIds():
     start_time = time.time()
     try:
         sql_statement = 'SELECT DISTINCT(t.gameId) FROM ewiis3.timeslot t'
-        df_finished_games = execute_sql_query(sql_statement)
+        df_all_gameIds = execute_sql_query(sql_statement)
+        all_gameIds = list(df_all_gameIds['gameId'])
     except Exception as e:
         print('Error occured while requesting all gameIds from db.')
-        df_finished_games = pd.DataFrame()
+        all_gameIds = []
     print('Loading all gameIds lasted: {} seconds.'.format(time.time() - start_time))
-    return list(df_finished_games['gameId'])
+    return all_gameIds
 
 
 def get_running_gameIds():
