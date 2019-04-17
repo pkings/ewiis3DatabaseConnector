@@ -147,3 +147,20 @@ def load_weather_forecast(game_id):
         df_lates_weather_forecast = pd.DataFrame()
     print('Loading grid weather forecast lasted: {} seconds.'.format(time.time() - start_time))
     return df_lates_weather_forecast, game_id
+
+
+####################################################
+#### Time and Game
+####################################################
+
+
+def load_finished_games():
+    start_time = time.time()
+    try:
+        sql_statement = 'SELECT DISTINCT(t.gameId) FROM ewiis3.finished_game t'
+        df_finished_games = execute_sql_query(sql_statement)
+    except Exception as e:
+        print('Error occured while requesting finished games from db.')
+        df_finished_games = pd.DataFrame()
+    print('Loading finished games lasted: {} seconds.'.format(time.time() - start_time))
+    return df_finished_games['gameId']
