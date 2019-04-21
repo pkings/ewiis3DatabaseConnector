@@ -26,18 +26,26 @@ def load_cleared_trades(game_id):
 ####################################################
 
 
-def load_grid_imbalance(game_id):
+def load_grid_imbalance(game_id, limit=336):
     if game_id is None:
         return pd.DataFrame(), game_id
 
     start_time = time.time()
     try:
-        sql_statement = 'SELECT prosumptin_meets_weather.*, ts.isWeekend, ts.dayOfWeek, ts.slotInDay FROM (SELECT dr.*, wr.cloudCover, wr.temperature, wr.windDirection, wr.windSpeed FROM (SELECT * FROM ewiis3.balance_report WHERE balance_report.gameId="{}") AS dr LEFT JOIN (SELECT * FROM ewiis3.weather_report WHERE weather_report.gameId="{}") AS wr ON dr.timeslotIndex = wr.timeslotIndex) AS prosumptin_meets_weather LEFT JOIN (SELECT * FROM ewiis3.timeslot WHERE timeslot.gameId="{}") AS ts ON prosumptin_meets_weather.timeslotIndex = ts.serialNumber;'.format(game_id, game_id, game_id)
+        sql_statement = """SELECT ts_meets_br.*, wr.temperature, wr.cloudCover, wr.windDirection, wr.windSpeed FROM
+  (SELECT ts.gameId, br.timeslotIndex, ts.isWeekend, ts.dayOfWeek, ts.slotInDay, ts.timestamp, br.netImbalance  FROM
+  (SELECT * FROM ewiis3.timeslot WHERE timeslot.gameId="{}" ORDER BY serialNumber DESC LIMIT {}) AS ts
+  LEFT JOIN
+  (SELECT * FROM ewiis3.balance_report WHERE balance_report.gameId="{}") AS br
+  ON ts.serialNumber=br.timeslotIndex) AS ts_meets_br
+LEFT JOIN
+  (SELECT * FROM ewiis3.weather_report WHERE weather_report.gameId="{}") AS wr
+  ON ts_meets_br.timeslotIndex = wr.timeslotIndex ORDER BY ts_meets_br.timeslotIndex ASC;""".format(game_id, limit, game_id, game_id)
         df_total_grid_imbalance = execute_sql_query(sql_statement)
     except Exception as e:
         print('Error occured while requesting grid imbalances from db.')
         df_total_grid_imbalance = pd.DataFrame()
-    print('Loading grid imbalance last: {} seconds.'.format(time.time() - start_time))
+    print('Loading grid imbalance join ts and wr for limit {} lasted: {} seconds.'.format(limit, time.time() - start_time))
     return df_total_grid_imbalance, game_id
 
 
