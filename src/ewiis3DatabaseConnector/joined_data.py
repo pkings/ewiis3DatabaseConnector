@@ -112,13 +112,17 @@ def load_customer_prosumption(game_id=None):
     return df_customer_prosumption
 
 
-def load_customer_prosumption_with_weather_and_time(game_id):
+def load_customer_prosumption_with_weather_and_time(game_id, limit=336):
     if game_id is None:
         return pd.DataFrame(), game_id
 
     start_time = time.time()
     try:
-        sql_statement = 'SELECT * FROM (SELECT * FROM (SELECT postedTimeslotIndex, SUM(kWH) FROM ewiis3.tariff_transaktion WHERE gameId = "{}" AND (txType = "CONSUME" OR txType = "PRODUCE") GROUP BY postedTimeslotIndex) AS customer_prod_con LEFT JOIN (SELECT * FROM ewiis3.weather_report WHERE weather_report.gameId="{}") AS wr ON customer_prod_con.postedTimeslotIndex = wr.timeslotIndex ) AS prosumption_meets_weather LEFT JOIN (SELECT * FROM ewiis3.timeslot WHERE gameId = "{}") AS ts ON prosumption_meets_weather.postedTimeslotIndex = ts.serialNumber;'.format(game_id, game_id, game_id)
+        sql_statement = """SELECT prosumption_meets_weather.*, ts.dayOfWeek, ts.isWeekend, ts.slotInDay FROM
+(SELECT * FROM (SELECT postedTimeslotIndex, SUM(kWH) FROM ewiis3.tariff_transaktion WHERE gameId="{}" AND (txType="CONSUME" OR txType="PRODUCE") GROUP BY postedTimeslotIndex ORDER BY postedTimeslotIndex DESC LIMIT {}) AS customer_prod_con
+LEFT JOIN
+(SELECT * FROM ewiis3.weather_report WHERE weather_report.gameId="{}") AS wr ON customer_prod_con.postedTimeslotIndex = wr.timeslotIndex ) AS prosumption_meets_weather
+  LEFT JOIN (SELECT * FROM ewiis3.timeslot WHERE gameId = "{}") AS ts ON prosumption_meets_weather.postedTimeslotIndex = ts.serialNumber ORDER BY postedTimeslotIndex ASC;""".format(game_id, limit, game_id, game_id)
         df_customer_prosumption = execute_sql_query(sql_statement)
     except Exception as e:
         print('Error occured while requesting customer prosumption from db.')
