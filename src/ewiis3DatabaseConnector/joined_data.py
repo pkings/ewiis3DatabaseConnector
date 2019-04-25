@@ -30,7 +30,6 @@ def load_grid_imbalance(game_id, limit=336):
     if game_id is None:
         return pd.DataFrame(), game_id
 
-    start_time = time.time()
     try:
         sql_statement = """SELECT ts_meets_br.*, wr.temperature, wr.cloudCover, wr.windDirection, wr.windSpeed FROM
   (SELECT ts.gameId, br.timeslotIndex, ts.isWeekend, ts.dayOfWeek, ts.slotInDay, ts.timestamp, br.netImbalance  FROM
@@ -45,7 +44,6 @@ LEFT JOIN
     except Exception as e:
         print('Error occured while requesting grid imbalances from db.')
         df_total_grid_imbalance = pd.DataFrame()
-    print('Loading grid imbalance join ts and wr for limit {} lasted: {} seconds.'.format(limit, time.time() - start_time))
     return df_total_grid_imbalance, game_id
 
 
@@ -117,7 +115,6 @@ def load_customer_prosumption_with_weather_and_time(game_id, limit=336):
     if game_id is None:
         return pd.DataFrame(), game_id
 
-    start_time = time.time()
     try:
         sql_statement = """SELECT prosumption_meets_weather.*, ts.dayOfWeek, ts.isWeekend, ts.slotInDay FROM
 (SELECT * FROM (SELECT postedTimeslotIndex, SUM(kWH) FROM ewiis3.tariff_transaktion WHERE gameId="{}" AND (txType="CONSUME" OR txType="PRODUCE") AND {} - tariff_transaktion.postedTimeslotIndex <= {} GROUP BY postedTimeslotIndex ORDER BY postedTimeslotIndex DESC LIMIT {}) AS customer_prod_con
@@ -128,7 +125,6 @@ LEFT JOIN
     except Exception as e:
         print('Error occured while requesting customer prosumption from db.')
         df_customer_prosumption = pd.DataFrame()
-    print('Loading customer prosumption last: {} seconds.'.format(time.time() - start_time))
     return df_customer_prosumption, game_id
 
 
@@ -136,27 +132,22 @@ def load_grid_consumption_and_production(game_id):
     if game_id is None:
         return pd.DataFrame(), game_id
 
-    start_time = time.time()
     try:
         sql_statement = 'SELECT prosumptin_meets_weather.*, ts.isWeekend, ts.dayOfWeek, ts.slotInDay FROM (SELECT dr.*, wr.cloudCover, wr.temperature, wr.windDirection, wr.windSpeed FROM (SELECT * FROM ewiis3.distribution_report WHERE distribution_report.gameId="{}") AS dr LEFT JOIN (SELECT * FROM ewiis3.weather_report WHERE weather_report.gameId="{}") AS wr ON dr.timeslot = wr.timeslotIndex) AS prosumptin_meets_weather LEFT JOIN (SELECT * FROM ewiis3.timeslot WHERE timeslot.gameId="{}") AS ts ON prosumptin_meets_weather.timeslot = ts.serialNumber;'.format(game_id, game_id, game_id)
         df_total_grid_consumption_and_production = execute_sql_query(sql_statement)
     except Exception as e:
         print('Error occured while requesting grid consumption and production from db.')
         df_total_grid_consumption_and_production = pd.DataFrame()
-    print('Loading grid consumption and production last: {} seconds.'.format(time.time() - start_time))
     return df_total_grid_consumption_and_production, game_id
 
 
 def load_weather_forecast(game_id):
     if game_id is None:
         return pd.DataFrame(), game_id
-
-    start_time = time.time()
     try:
         sql_statement = 'SELECT t.* FROM ewiis3.weather_forecast t WHERE gameId="{}" ORDER BY postedTimeslotIndex DESC LIMIT 24'.format(game_id)
         df_lates_weather_forecast = execute_sql_query(sql_statement)
     except Exception as e:
         print('Error occured while requesting weather forecast from db.')
         df_lates_weather_forecast = pd.DataFrame()
-    print('Loading grid weather forecast lasted: {} seconds.'.format(time.time() - start_time))
     return df_lates_weather_forecast, game_id
