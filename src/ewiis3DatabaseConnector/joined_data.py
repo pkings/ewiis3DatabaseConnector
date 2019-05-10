@@ -68,12 +68,16 @@ def load_tariff_evaluation_metrics():
     return df_tariff_evaluation
 
 
-def load_tariff_specification_meets_avg_rates():
+def load_tariff_specification_meets_avg_rates(game_id=None):
+    if game_id:
+        where_clause = ' WHERE gameId="{}"'.format(game_id)
+    else:
+        where_clause = ''
     sql_statement = """SELECT * FROM
-        ((SELECT t.* FROM ewiis3.tariff_specification t) AS ts
+        ((SELECT t.* FROM ewiis3.tariff_specification t) {} AS ts
         LEFT JOIN
-        (SELECT AVG(minValueMoney), AVG(maxValueMoney), AVG(maxCurtailment), AVG(tierThreshold), AVG(downRegulationPayment), AVG(upRegulationPayment), COUNT(*) AS rateCount, t.tariffSpecificationId FROM ewiis3.rate t GROUP BY tariffSpecificationId) AS rateAnalysis
-        ON ts.tariffSpecificationId=rateAnalysis.tariffSpecificationId)"""
+        (SELECT AVG(minValueMoney), AVG(maxValueMoney), AVG(maxCurtailment), AVG(tierThreshold), AVG(downRegulationPayment), AVG(upRegulationPayment), COUNT(*) AS rateCount, t.tariffSpecificationId FROM ewiis3.rate t {} GROUP BY tariffSpecificationId) AS rateAnalysis
+        ON ts.tariffSpecificationId=rateAnalysis.tariffSpecificationId)""".format(where_clause, where_clause)
     df_tariff_spec_avg_rates = execute_sql_query(sql_statement)
     return df_tariff_spec_avg_rates
 
