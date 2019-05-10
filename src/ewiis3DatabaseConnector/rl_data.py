@@ -12,6 +12,7 @@ def load_consumption_tariff_earnings(game_id, limit):
 
 
 def load_consumption_tariff_prosumption(game_id, limit):
-    sql_statement = """SELECT t.postedTimeslotIndex, SUM(t.kWh) FROM ewiis3.tariff_transaktion t WHERE gameId="{}" AND powerType="CONSUMPTION" AND (txType="CONSUME" OR txType = "PRODUCE") GROUP BY postedTimeslotIndex ORDER BY postedTimeslotIndex DESC Limit {}""".format(game_id, limit)
+    sql_statement = """SELECT * FROM (SELECT t.postedTimeslotIndex, SUM(t.kWh) FROM ewiis3.tariff_transaktion t WHERE gameId="{}" AND powerType="CONSUMPTION" AND (txType="CONSUME" OR txType = "PRODUCE") GROUP BY postedTimeslotIndex ORDER BY postedTimeslotIndex DESC Limit {}) AS prosumption
+LEFT JOIN (SELECT * FROM ewiis3.distribution_report t WHERE gameId="{}") AS dist ON  prosumption.postedTimeslotIndex = dist.timeslot""".format(game_id, limit, game_id)
     df_tariff_spec_avg_rates = execute_sql_query(sql_statement)
     return df_tariff_spec_avg_rates
