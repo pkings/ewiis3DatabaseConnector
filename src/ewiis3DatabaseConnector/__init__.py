@@ -30,3 +30,5 @@ from .full_table_load import load_capacity_transactions  # noqa
 from .full_table_load import load_tariff_specifications  # noqa
 from .full_table_load import load_order_submits  # noqa
 from .full_table_load import load_tariff_subscription_shares  # noqa
+from .rl_data import load_consumption_tariff_earnings  # noqa
+from .rl_data import load_consumption_tariff_prosumption  # noqa
